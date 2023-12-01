@@ -3,6 +3,9 @@ import express from 'express';
 // cookie parser
 import cookieParser from 'cookie-parser';
 
+// import cors
+import cors from 'cors';
+
 // set config for env variables
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
@@ -32,6 +35,7 @@ mongoose.connection.on('disconnected', () => {
 });
 
 // middlewares
+app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 
