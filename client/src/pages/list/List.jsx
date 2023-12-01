@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Navbar from '../../components/navbar/Navbar';
 import Header from '../../components/header/Header';
 import './list.css';
@@ -7,9 +7,13 @@ import { format } from 'date-fns';
 import { DateRange } from 'react-date-range';
 import SearchItem from '../../components/searchItem/SearchItem';
 import useFetch from '../../hooks/useFetch';
+import { SearchContext } from '../../context/SearchContext';
 
 const List = () => {
   const location = useLocation();
+
+  // get context data
+  const { dispatch } = useContext(SearchContext);
 
   // define component's state
   const [destination, setDestination] = useState(location.state.destination);
@@ -24,6 +28,7 @@ const List = () => {
   );
 
   const handleClick = () => {
+    dispatch({ type: 'NEW_SEARCH', payload: { destination, dates, options } });
     refetch();
   };
 
@@ -54,6 +59,7 @@ const List = () => {
                 <DateRange
                   onChange={(item) => setDates([item.selection])}
                   minDate={new Date()}
+                  ranges={dates}
                 />
               )}
             </div>
