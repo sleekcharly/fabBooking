@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBed,
@@ -14,6 +14,7 @@ import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import { SearchContext } from '../../context/SearchContext';
 
 const Header = ({ type }) => {
   // state for managing destination
@@ -22,7 +23,7 @@ const Header = ({ type }) => {
   // display state for calendar
   const [openDate, setOpenDate] = useState(false);
   // state for date range
-  const [date, setDate] = useState([
+  const [dates, setDates] = useState([
     {
       startDate: new Date(),
       endDate: new Date(),
@@ -41,9 +42,13 @@ const Header = ({ type }) => {
   // set navigation
   const navigate = useNavigate();
 
+  // get context data
+  const { dispatch } = useContext(SearchContext);
+
   // function for handling search
   const handleSearch = () => {
-    navigate('/hotels', { state: { destination, date, options } });
+    dispatch({ type: 'NEW_SEARCH', payload: { destination, dates, options } });
+    navigate('/hotels', { state: { destination, dates, options } });
   };
 
   const handleOption = (name, operation) => {
@@ -116,17 +121,17 @@ const Header = ({ type }) => {
                   onClick={() => setOpenDate(!openDate)}
                   className="headerSearchText"
                   data-testid="calendarPicker"
-                >{`${format(date[0].startDate, 'MM/dd/yyyy')} to ${format(
-                  date[0].endDate,
+                >{`${format(dates[0].startDate, 'MM/dd/yyyy')} to ${format(
+                  dates[0].endDate,
                   'MM/dd/yyyy',
                 )}`}</span>
                 {openDate && (
                   <div className="date" data-testid="date-range">
                     <DateRange
                       editableDateInputs={true}
-                      onChange={(item) => setDate([item.selection])}
+                      onChange={(item) => setDates([item.selection])}
                       moveRangeOnFirstSelection={false}
-                      ranges={date}
+                      ranges={dates}
                       minDate={new Date()}
                     />
                   </div>
