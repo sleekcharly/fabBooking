@@ -6,8 +6,6 @@ const Featured = () => {
     '/hotels/countByCity?cities=Lagos,abuja,ibadan',
   );
 
-  console.log(data);
-
   return (
     <div className="featured">
       {loading ? (
